@@ -3,7 +3,7 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "8000:3000"
+      - "8000:8000"
     volumes:
       - ./frontend:/app
       - node-modules_frontend:/app/node_modules
@@ -14,6 +14,7 @@ services:
     volumes:
       - ./backend:/app
       - node-modules_backend:/app/node_modules
+    command: npm start
 
 volumes:
   node-modules_frontend:
