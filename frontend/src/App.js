@@ -1,5 +1,6 @@
 import React from "react";
 import InvoiceComponent from "./components/InvoiceComponent";
+import "./tailwind.css";
 
 function App() {
   return (

@@ -23,18 +23,24 @@ const InvoiceComponent = () => {
   );
 
   return (
-    <div>
-      <h1>{invoiceData.companyName}の請求書</h1>
-      <ul>
+    <div className="max-w-4xl mx-auto mt-10">
+      <h1 className="text-xl font-bold mb-4">
+        {invoiceData.companyName}の請求書
+      </h1>
+      <ul className="bg-white shadow-md rounded-lg overflow-hidden">
         {invoiceData.items.map((item, index) => (
-          <li key={index}>
-            <div>
-              {item.itemName}: {item.amount.toLocaleString()}円
-            </div>
+          <li key={index} className="px-4 py-2 border-b last:border-b-0">
+            {item.itemName}:{" "}
+            <span className="font-semibold">
+              {item.amount.toLocaleString()}円
+            </span>
           </li>
         ))}
       </ul>
-      <h2>合計金額: {totalAmount.toLocaleString()}円</h2>
+      <h2 className="text-lg font-bold mt-4">
+        合計金額:{" "}
+        <span className="text-green-500">{totalAmount.toLocaleString()}円</span>
+      </h2>
     </div>
   );
 };
