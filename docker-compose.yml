@@ -6,13 +6,15 @@ services:
       - "8000:3000"
     volumes:
       - ./frontend:/app
-      - node-modules:/app/node_modules
+      - node-modules_frontend:/app/node_modules
   backend:
     build: ./backend
     ports:
       - "3000:3000"
     volumes:
       - ./backend:/app
+      - node-modules_backend:/app/node_modules
 
 volumes:
-  node-modules:
+  node-modules_frontend:
+  node-modules_backend:
