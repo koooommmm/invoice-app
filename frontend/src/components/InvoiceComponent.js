@@ -1,29 +1,19 @@
 import React from "react";
+import Invoice from "../models/Invoice";
+import InvoiceItem from "../models/InvoiceItem";
 
 const invoices = [
-  {
-    id: 1,
-    companyName: "NEXTs株式会社",
-    items: [
-      {
-        itemName: "面白くないのに笑いを取ろうとした際に生じた精神的苦痛料",
-        amount: 1000000,
-      },
-      { itemName: "私がこの世に存在する尊さ料", amount: 20000000000 },
-    ],
-  },
-  {
-    id: 2,
-    companyName: "めんどくさいからテストと言う名前にする",
-    items: [
-      { itemName: "めんどくさいからテストと言う名前にする", amount: 1000000 },
-    ],
-  },
-  {
-    id: 3,
-    companyName: "ああああ",
-    items: [{ itemName: "いいいい", amount: 10 }],
-  },
+  new Invoice(1, "NEXTs株式会社", [
+    new InvoiceItem(
+      "面白くないのに笑いを取ろうとした際に生じた精神的苦痛料",
+      1000000
+    ),
+    new InvoiceItem("私がこの世に存在する尊さ料", 20000000000),
+  ]),
+  new Invoice(2, "めんどくさいからテストと言う名前にする", [
+    new InvoiceItem("めんどくさいからテストと言う名前にする", 1000000),
+  ]),
+  new Invoice(3, "ああああ", [new InvoiceItem("いいいい", 10)]),
 ];
 
 const InvoiceComponent = ({ invoiceId }) => {
