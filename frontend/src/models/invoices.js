@@ -3,10 +3,11 @@ import InvoiceItem from "./InvoiceItem";
 
 export const invoices = [
   new Invoice(1, "株式会社ABCD", new Date(), new Date(), [
-    new InvoiceItem(
-      "面白くないのに笑いを取ろうとした際に生じた精神的苦痛料",
-      1000000
-    ),
-    new InvoiceItem("私がこの世に存在する尊さ料", 20000000000),
+    new InvoiceItem("item1", 10, "個", 100, 0.1),
+    new InvoiceItem("item2", 15, "個", 200, 0.1),
+  ]),
+  new Invoice(2, "株式会社EFGH", new Date(), new Date(), [
+    new InvoiceItem("item3", 20, "個", 100, 0.1),
+    new InvoiceItem("item4", 35, "個", 200, 0.1),
   ]),
 ];
