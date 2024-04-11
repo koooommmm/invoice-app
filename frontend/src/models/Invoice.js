@@ -28,8 +28,12 @@ export default class Invoice {
     return subtotal + subtotal * taxRate;
   }
 
-  // 請求状況ステータスを更新
-  updateStatus(newStatus) {
-    this.status = newStatus;
+  updateInvoice(updateInvoice) {
+    this.companyName = updateInvoice.companyName;
+    this.billingDate = updateInvoice.billingDate;
+    this.dueDate = updateInvoice.dueDate;
+    this.author = updateInvoice.author;
+    this.items = updateInvoice.items;
+    this.status = updateInvoice.status;
   }
 }

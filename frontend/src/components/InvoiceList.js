@@ -1,8 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { invoices } from "../models/invoices";
+import { useData } from "../models/DataContext";
 
 const InvoiceList = () => {
+  const { invoices } = useData();
   const navigate = useNavigate(); // useNavigateフックを使ってnavigate関数を取得
 
   // 行をクリックしたときに実行する関数
@@ -12,7 +13,7 @@ const InvoiceList = () => {
 
   return (
     <div>
-      <div className="max-w-4xl mx-auto mt-10">
+      <div className="max-w-5xl mx-auto mt-10">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">請求書リスト</h1>
           <Link
@@ -40,9 +41,9 @@ const InvoiceList = () => {
                     onClick={() => handleRowClick(invoice.id)}
                   >
                     <td>
-                      <text className="border-2 border-indigo-500 text-indigo-700 font-bold py-2 px-4 rounded">
+                      <span className="border-2 border-indigo-500 text-indigo-700 font-bold py-2 px-4 rounded">
                         {invoice.status}
-                      </text>
+                      </span>
                     </td>
                     <td className="py-4 px-6">
                       <div className="text-xl">

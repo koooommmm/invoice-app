@@ -1,13 +1,14 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { invoices } from "../models/invoices";
+import { useData } from "../models/DataContext";
 
 const InvoiceDetail = () => {
+  const { invoices } = useData();
   let { invoiceId } = useParams();
   const invoice = invoices.find((inv) => inv.id === parseInt(invoiceId, 10));
   return (
     <div>
-      <div className="max-w-4xl mx-auto mt-10">
+      <div className="max-w-5xl mx-auto mt-10">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">請求書リスト</h1>
           <Link
@@ -18,7 +19,7 @@ const InvoiceDetail = () => {
           </Link>
         </div>
       </div>
-      <div className="max-w-4xl mx-auto mt-10">
+      <div className="max-w-5xl mx-auto mt-10">
         <div className="p-5 bg-white shadow-md rounded-lg">
           <div className="flex justify-between">
             <div>
