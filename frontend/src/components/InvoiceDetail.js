@@ -1,11 +1,50 @@
-import React from "react";
+import { onValue, ref } from "firebase/database";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useData } from "../models/DataContext";
+import { database } from "../firebase";
+import Invoice from "../models/Invoice";
+import InvoiceItem from "../models/InvoiceItem";
 
 const InvoiceDetail = () => {
-  const { invoices } = useData();
+  const [invoice, setInvoice] = useState(null);
   let { invoiceId } = useParams();
-  const invoice = invoices.find((inv) => inv.id === parseInt(invoiceId, 10));
+
+  useEffect(() => {
+    const invoiceIdRef = ref(database, `invoices/${invoiceId}`);
+    const unsubscribe = onValue(invoiceIdRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        // Invoiceクラスのインスタンスを作成し、データを格納
+        const invoice = new Invoice(
+          snapshot.key,
+          data.companyName,
+          data.billingDate ? new Date(data.billingDate) : null,
+          data.dueDate ? new Date(data.dueDate) : null,
+          data.author,
+          data.items.map(
+            (itemData) =>
+              new InvoiceItem(
+                itemData.itemName,
+                itemData.quantity,
+                itemData.unit,
+                itemData.unitPrice,
+                itemData.taxRate
+              )
+          ),
+          data.status
+        );
+        setInvoice(invoice);
+      } else {
+        setInvoice();
+      }
+    });
+
+    return () => unsubscribe();
+  }, [invoiceId]);
+
+  if (!invoice) {
+    return;
+  }
   return (
     <div>
       <div className="max-w-5xl mx-auto mt-10">
@@ -25,7 +64,6 @@ const InvoiceDetail = () => {
             <div>
               <h1 className="text-xl font-bold mb-4">請求先情報</h1>
               <p className="mb-2">取引先: {invoice.companyName}</p>
-              <p className="mb-2">請求書番号: {invoice.id}</p>
               <p className="mb-2">
                 請求日: {invoice.billingDate.toLocaleDateString()}
               </p>
