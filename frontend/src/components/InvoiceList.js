@@ -1,10 +1,47 @@
-import React from "react";
+import { onValue, ref } from "firebase/database";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useData } from "../models/DataContext";
+import { database } from "../firebase";
+import Invoice from "../models/Invoice";
+import InvoiceItem from "../models/InvoiceItem";
 
 const InvoiceList = () => {
-  const { invoices } = useData();
-  const navigate = useNavigate(); // useNavigateフックを使ってnavigate関数を取得
+  const [invoices, setInvoices] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const invoicesRef = ref(database, "invoices"); // "invoices"というデータベースの参照を作成
+
+    const unsubscribe = onValue(invoicesRef, (snapshot) => {
+      const invoicesData = [];
+      snapshot.forEach((childSnapshot) => {
+        const data = childSnapshot.val();
+        // Invoiceクラスのインスタンスを作成し、データを格納
+        const invoice = new Invoice(
+          childSnapshot.key,
+          data.companyName,
+          data.billingDate ? new Date(data.billingDate) : null,
+          data.dueDate ? new Date(data.dueDate) : null,
+          data.author,
+          data.items.map(
+            (itemData) =>
+              new InvoiceItem(
+                itemData.itemName,
+                itemData.quantity,
+                itemData.unit,
+                itemData.unitPrice,
+                itemData.taxRate
+              )
+          ),
+          data.status
+        );
+        invoicesData.push(invoice);
+      });
+      setInvoices(invoicesData);
+    });
+
+    return () => unsubscribe(); // コンポーネントのアンマウント時にリスナーを解除
+  }, []);
 
   // 行をクリックしたときに実行する関数
   const handleRowClick = (invoiceId) => {
@@ -49,13 +86,12 @@ const InvoiceList = () => {
                       <div className="text-xl">
                         {invoice.companyName} 様<br />
                       </div>
-                      {invoice.billingDate.toLocaleDateString()}
+                      {invoice.billingDate
+                        ? invoice.billingDate.toLocaleDateString()
+                        : ""}
                     </td>
                     <td className="py-4 px-6">
-                      <div className="text-xl">
-                        {invoice.getTotalAmount().toLocaleString()}円 <br />
-                      </div>
-                      ({invoice.getTotalAmountWithTax().toLocaleString()}円)
+                      <div className="text-xl"></div>
                     </td>
                   </tr>
                 ))}
