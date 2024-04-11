@@ -1,27 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addInvoice } from "../firebaseFunctions";
 import Invoice from "../models/Invoice";
 import InvoiceItem from "../models/InvoiceItem";
 
-const InvoiceForm = () => {
+const InvoiceForm = ({ initialValues, onSubmit }) => {
   const navigate = useNavigate();
-  const [companyName, setCompanyName] = useState("");
-  const [billingDate, setBillingDate] = useState(
-    new Date().toISOString().slice(0, 10)
+  const [companyName, setCompanyName] = useState(
+    initialValues.companyName || ""
   );
-  const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
-  const [author, setAuthor] = useState("");
-  const [items, setItems] = useState([
-    {
-      itemName: "",
-      quantity: 1,
-      unit: "",
-      unitPrice: 0,
-      taxRate: 0.1,
-      amount: 0,
-    },
-  ]);
+  const [billingDate, setBillingDate] = useState(
+    initialValues.billingDate || new Date().toISOString().slice(0, 10)
+  );
+  const [dueDate, setDueDate] = useState(
+    initialValues.dueDate || new Date().toISOString().slice(0, 10)
+  );
+  const [author, setAuthor] = useState(initialValues.author || "");
+  const [items, setItems] = useState(
+    initialValues.items || [
+      {
+        itemName: "",
+        quantity: 1,
+        unit: "",
+        unitPrice: 0,
+        taxRate: 0.1,
+        amount: 0,
+      },
+    ]
+  );
 
   const addInvoiceItem = () => {
     setItems([
@@ -79,7 +84,8 @@ const InvoiceForm = () => {
       author,
       newInvoiceItems
     );
-    await addInvoice(JSON.parse(JSON.stringify(newInvoice)));
+
+    onSubmit(newInvoice);
     navigate("/");
   };
 
@@ -111,6 +117,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="text"
+                  value={companyName}
                   className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={(e) => setCompanyName(e.target.value)}
                 />
@@ -121,6 +128,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="date"
+                  value={billingDate}
                   className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={(e) => setBillingDate(e.target.value)}
                 />
@@ -131,6 +139,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="date"
+                  value={dueDate}
                   className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={(e) => setDueDate(e.target.value)}
                 />
@@ -144,6 +153,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="text"
+                  value={author}
                   className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   onChange={(e) => setAuthor(e.target.value)}
                 />
