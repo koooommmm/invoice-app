@@ -1,106 +1,102 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useData } from "../models/DataContext";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addInvoice } from "../firebaseFunctions";
+import Invoice from "../models/Invoice";
+import InvoiceItem from "../models/InvoiceItem";
 
 const InvoiceForm = () => {
-  const { invoices, updateInvoice, addInvoice } = useData();
-  let { invoiceId } = useParams();
   const navigate = useNavigate();
-
-  // 請求書の初期データを決定します
-  const getInitialInvoiceData = () => {
-    if (invoiceId) {
-      const invoiceData = invoices.find(
-        (inv) => inv.id === parseInt(invoiceId, 10)
-      );
-      return {
-        ...invoiceData,
-        items: [...invoiceData.items],
-        billingDate: new Date(invoiceData.billingDate),
-        dueDate: new Date(invoiceData.dueDate),
-      };
-    } else {
-      // 新規作成時の空の請求書データ
-      return {
-        companyName: "",
-        id: null,
-        billingDate: new Date(),
-        dueDate: new Date(),
-        items: [],
-      };
-    }
-  };
-
-  const [invoice, setInvoice] = useState(getInitialInvoiceData);
-
-  // 新規作成時にURLのinvoiceIdが変わる場合を考慮して、依存配列にinvoiceIdを追加
-  useEffect(() => {
-    setInvoice(getInitialInvoiceData());
-  }, [invoiceId]);
-
-  // 明細を追加する関数
-  const addInvoiceItem = (event) => {
-    event.preventDefault();
-    const newItem = {
+  const [companyName, setCompanyName] = useState("");
+  const [billingDate, setBillingDate] = useState(
+    new Date().toISOString().slice(0, 10)
+  );
+  const [dueDate, setDueDate] = useState(new Date().toISOString().slice(0, 10));
+  const [author, setAuthor] = useState("");
+  const [items, setItems] = useState([
+    {
       itemName: "",
-      quantity: 0,
+      quantity: 1,
       unit: "",
       unitPrice: 0,
-      taxRate: 0,
-    };
-    setInvoice({ ...invoice, items: [...invoice.items, newItem] });
+      taxRate: 0.1,
+      amount: 0,
+    },
+  ]);
+
+  const addInvoiceItem = () => {
+    setItems([
+      ...items,
+      {
+        itemName: "",
+        quantity: 1,
+        unit: "",
+        unitPrice: 0,
+        taxRate: 0.1,
+        amount: 0,
+      },
+    ]);
   };
 
-  // 明細の値が変更されたときに呼ばれる関数
   const handleItemChange = (index, field, value) => {
-    const updatedItems = invoice.items.map((item, i) => {
+    const updatedItems = items.map((item, i) => {
       if (i === index) {
-        const updatedValue =
-          field === "quantity" || field === "unitPrice" || field === "taxRate"
-            ? parseFloat(value) || 0 // 数値に変換、無効な入力は0にする
-            : value;
-        return { ...item, [field]: updatedValue };
+        const updatedItem = {
+          ...item,
+          [field]:
+            field === "quantity" || field === "unitPrice" || field === "taxRate"
+              ? parseFloat(value)
+              : value,
+        };
+        updatedItem.amount = Math.floor(
+          updatedItem.quantity *
+            updatedItem.unitPrice *
+            (1 + updatedItem.taxRate)
+        );
+        return updatedItem;
       }
       return item;
     });
-    setInvoice({ ...invoice, items: updatedItems });
+    setItems(updatedItems);
   };
 
-  // 各項目の金額を計算する関数
-  const calculateItemAmount = (quantity, unitPrice, taxRate) => {
-    return quantity * unitPrice * (1 + taxRate);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const newInvoiceItems = items.map(
+      (item) =>
+        new InvoiceItem(
+          item.itemName,
+          item.quantity,
+          item.unit,
+          item.unitPrice,
+          item.taxRate
+        )
+    );
+    const newInvoice = new Invoice(
+      null,
+      companyName,
+      billingDate,
+      dueDate,
+      author,
+      newInvoiceItems
+    );
+    await addInvoice(JSON.parse(JSON.stringify(newInvoice)));
+    navigate("/invoices");
   };
 
-  // 小計を計算
-  const getSubTotal = () => {
-    return invoice.items.reduce(
+  const calculateTotals = () => {
+    const subtotal = items.reduce(
       (acc, item) => acc + item.quantity * item.unitPrice,
       0
     );
-  };
-
-  // 税額を計算
-  const getTax = () => {
-    return invoice.items.reduce(
+    const tax = items.reduce(
       (acc, item) => acc + item.quantity * item.unitPrice * item.taxRate,
       0
     );
+    const total = subtotal + tax;
+    return { subtotal, tax, total };
   };
 
-  // 合計を計算
-  const getTotal = () => {
-    return getSubTotal() + getTax();
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (invoiceId) {
-      updateInvoice(invoiceId, invoice);
-    } else {
-      addInvoice(invoice); // 新規請求書を追加する疑似関数
-    }
-    navigate(`/invoice/${invoice.id}`);
-  };
+  const { subtotal, tax, total } = calculateTotals();
 
   return (
     <form onSubmit={handleSubmit}>
@@ -115,18 +111,8 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="text"
-                  value={invoice.companyName}
-                  onChange={(e) =>
-                    setInvoice({ ...invoice, companyName: e.target.value })
-                  }
-                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
-              </div>
-              <div className="mb-5">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  請求書番号
-                </label>
-                <span>{invoice.id}</span>
               </div>
               <div className="mb-5">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -134,11 +120,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="date"
-                  value={invoice.billingDate.toLocaleDateString("sv-SE")}
-                  onChange={(e) =>
-                    setInvoice({ ...invoice, billingDate: e.target.value })
-                  }
-                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
               <div className="mb-5">
@@ -147,11 +129,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="date"
-                  value={invoice.dueDate.toLocaleDateString("sv-SE")}
-                  onChange={(e) =>
-                    setInvoice({ ...invoice, dueDate: e.target.value })
-                  }
-                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </div>
@@ -163,11 +141,7 @@ const InvoiceForm = () => {
                 </label>
                 <input
                   type="text"
-                  value={invoice.author}
-                  onChange={(e) =>
-                    setInvoice({ ...invoice, author: e.target.value })
-                  }
-                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 />
               </div>
             </div>
@@ -190,11 +164,12 @@ const InvoiceForm = () => {
                 </tr>
               </thead>
               <tbody>
-                {invoice.items.map((item, index) => (
+                {items.map((item, index) => (
                   <tr key={index} className="h-12 border-gray-300 border-b">
                     <td>
                       <input
                         type="text"
+                        className="col-span-2"
                         value={item.itemName}
                         onChange={(e) =>
                           handleItemChange(index, "itemName", e.target.value)
@@ -231,40 +206,33 @@ const InvoiceForm = () => {
                     <td>
                       <input
                         type="number"
+                        step="0.01"
                         value={item.taxRate}
                         onChange={(e) =>
                           handleItemChange(index, "taxRate", e.target.value)
                         }
                       />
                     </td>
-                    <td>
-                      {calculateItemAmount(
-                        item.quantity,
-                        item.unitPrice,
-                        item.taxRate
-                      ).toLocaleString()}
-                      円
-                    </td>
+                    <td>{item.amount.toLocaleString()}円</td>
                   </tr>
                 ))}
               </tbody>
             </table>
             <button
+              type="button"
               onClick={addInvoiceItem}
-              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
-              + 項目を追加
+              明細を追加
             </button>
           </div>
         </div>
         <div className="flex justify-end mt-6">
           <div className="w-1/3">
-            <p className="text-right">
-              小計: {getSubTotal().toLocaleString()}円
-            </p>
-            <p className="text-right">消費税: {getTax().toLocaleString()}円</p>
+            <p className="text-right">小計: {subtotal.toLocaleString()}円</p>
+            <p className="text-right">消費税: {tax.toLocaleString()}円</p>
             <p className="text-right font-bold">
-              合計: {getTotal().toLocaleString()}円
+              合計: {total.toLocaleString()}円
             </p>
           </div>
         </div>
