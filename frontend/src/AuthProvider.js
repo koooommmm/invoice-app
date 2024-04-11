@@ -33,8 +33,12 @@ export const AuthProvider = ({ children }) => {
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
+  const logout = () => {
+    return auth.signOut();
+  };
+
   return (
-    <AuthContext.Provider value={{ currentUser, login, signup }}>
+    <AuthContext.Provider value={{ currentUser, login, signup, logout }}>
       {!loading && children}
     </AuthContext.Provider>
   );

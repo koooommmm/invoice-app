@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./AuthProvider";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
+import Header from "./components/Header";
 import InvoiceCreate from "./components/InvoiceCreate";
 import InvoiceDetail from "./components/InvoiceDetail";
 import InvoiceList from "./components/InvoiceList";
@@ -21,6 +22,7 @@ function App() {
     <AuthProvider>
       <DataProvider>
         <Router>
+          <Header></Header>
           <Routes>
             <Route
               path="/login"
