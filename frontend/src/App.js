@@ -1,11 +1,8 @@
 import React from "react";
-import {
-  Navigate,
-  Route,
-  BrowserRouter as Router,
-  Routes,
-} from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "./AuthProvider";
+import PrivateRoute from "./PrivateRoute";
+import PublicRoute from "./PublicRoute";
 import InvoiceCreate from "./components/InvoiceCreate";
 import InvoiceDetail from "./components/InvoiceDetail";
 import InvoiceList from "./components/InvoiceList";
@@ -15,21 +12,32 @@ import SignUpForm from "./components/SignUpForm";
 import { DataProvider } from "./models/DataContext";
 import "./tailwind.css";
 
-// 認証が必要なルートを管理するコンポーネント
-const PrivateRoute = ({ children }) => {
-  const { currentUser } = useAuth();
-  return currentUser ? children : <Navigate to="/login" />;
-};
-
 function App() {
+  const { loading } = useAuth();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <AuthProvider>
-      {" "}
       <DataProvider>
         <Router>
           <Routes>
-            <Route path="/login" element={<LoginForm />} />{" "}
-            <Route path="/signup" element={<SignUpForm />} />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <LoginForm />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <SignUpForm />
+                </PublicRoute>
+              }
+            />
             <Route
               path="/"
               element={
