@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import InvoiceCreate from "./components/InvoiceCreate";
 import InvoiceDetail from "./components/InvoiceDetail";
 import InvoiceList from "./components/InvoiceList";
 import InvoiceUpdate from "./components/InvoiceUpdate";
@@ -17,6 +18,7 @@ function App() {
             path="/invoice/:invoiceId/update"
             element={<InvoiceUpdate />}
           />
+          <Route path="/create-invoice" element={<InvoiceCreate />} />
         </Routes>
       </Router>
     </DataProvider>

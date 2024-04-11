@@ -1,19 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useData } from "../models/DataContext";
 
 const InvoiceForm = () => {
-  const { invoices, updateInvoice } = useData();
+  const { invoices, updateInvoice, addInvoice } = useData();
   let { invoiceId } = useParams();
-  const navigation = useNavigate();
-  const invoiceData = invoices.find(
-    (inv) => inv.id === parseInt(invoiceId, 10)
-  );
+  const navigate = useNavigate();
 
-  const [invoice, setInvoice] = useState({
-    ...invoiceData,
-    items: [...invoiceData.items],
-  });
+  // 請求書の初期データを決定します
+  const getInitialInvoiceData = () => {
+    if (invoiceId) {
+      const invoiceData = invoices.find(
+        (inv) => inv.id === parseInt(invoiceId, 10)
+      );
+      return {
+        ...invoiceData,
+        items: [...invoiceData.items],
+        billingDate: new Date(invoiceData.billingDate),
+        dueDate: new Date(invoiceData.dueDate),
+      };
+    } else {
+      // 新規作成時の空の請求書データ
+      return {
+        companyName: "",
+        id: null,
+        billingDate: new Date(),
+        dueDate: new Date(),
+        items: [],
+      };
+    }
+  };
+
+  const [invoice, setInvoice] = useState(getInitialInvoiceData);
+
+  // 新規作成時にURLのinvoiceIdが変わる場合を考慮して、依存配列にinvoiceIdを追加
+  useEffect(() => {
+    setInvoice(getInitialInvoiceData());
+  }, [invoiceId]);
 
   // 明細を追加する関数
   const addInvoiceItem = (event) => {
@@ -71,8 +94,12 @@ const InvoiceForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    updateInvoice(invoiceId, invoice); // invoices配列を更新する疑似関数
-    navigation(`/invoice/${invoiceId}`); // 保存後に請求書リストページに遷移
+    if (invoiceId) {
+      updateInvoice(invoiceId, invoice);
+    } else {
+      addInvoice(invoice); // 新規請求書を追加する疑似関数
+    }
+    navigate(`/invoice/${invoice.id}`);
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
-import Invoice from "./Invoice"; // Invoice クラスのパスを正しく指定してください
-import InvoiceItem from "./InvoiceItem"; // InvoiceItem クラスのパスを正しく指定してください
+import Invoice from "./Invoice";
+import InvoiceItem from "./InvoiceItem";
 
 const DataContext = createContext();
 
@@ -16,23 +16,31 @@ export const DataProvider = ({ children }) => {
     ]),
   ]);
 
-  // データを更新する関数
   const updateInvoice = (id, updatedInvoice) => {
-    console.log(updatedInvoice);
-    console.log(id);
-    setInvoices((prevInvoices) => {
-      const newInvoices = [updatedInvoice, updatedInvoice];
-      console.log(newInvoices); // 更新後の状態を確認
-      return newInvoices;
-    });
+    setInvoices((prevInvoices) =>
+      prevInvoices.map((inv) => (inv.id === id ? updatedInvoice : inv))
+    );
+  };
+
+  const addInvoice = (newInvoice) => {
+    console.log(newInvoice);
+    // setInvoices((prevInvoices) => {
+    //   // 新しいIDを決定する
+    //   const newId =
+    //     prevInvoices.length > 0
+    //       ? Math.max(...prevInvoices.map((inv) => inv.id)) + 1
+    //       : 1;
+    //   // 新しい請求書オブジェクトにIDをセットする
+    //   const invoiceToAdd = new Invoice(newId, ...newInvoice);
+    //   return [...prevInvoices, invoiceToAdd];
+    // });
   };
 
   return (
-    <DataContext.Provider value={{ invoices, updateInvoice }}>
+    <DataContext.Provider value={{ invoices, updateInvoice, addInvoice }}>
       {children}
     </DataContext.Provider>
   );
 };
 
-// Contextを利用するためのカスタムフック
 export const useData = () => useContext(DataContext);
