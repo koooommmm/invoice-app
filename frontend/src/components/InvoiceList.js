@@ -105,9 +105,9 @@ const InvoiceList = () => {
                           e.stopPropagation();
                           handleDeleteInvoice(invoice.id);
                         }}
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                        className="text-red-600 hover:text-red-900"
                       >
-                        削除
+                        <span className="i-lucide-trash"></span>
                       </button>
                     </td>
                   </tr>

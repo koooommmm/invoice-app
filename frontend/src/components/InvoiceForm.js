@@ -62,6 +62,12 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
     setItems(updatedItems);
   };
 
+  const deleteInvoiceItem = (index) => {
+    const updatedItems = [...items];
+    updatedItems.splice(index, 1);
+    setItems(updatedItems);
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newInvoiceItems = items.map(
@@ -226,6 +232,15 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                       />
                     </td>
                     <td>{item.amount.toLocaleString()}円</td>
+                    <td>
+                      <button
+                        type="button"
+                        onClick={() => deleteInvoiceItem(index)}
+                        className="text-red-600 hover:text-red-900"
+                      >
+                        <span className="i-lucide-trash w-5"></span>
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
