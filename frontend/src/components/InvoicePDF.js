@@ -79,14 +79,12 @@ const styles = StyleSheet.create({
   },
   tableCellHeader: {
     margin: "auto",
-    margin: 5,
     fontSize: 12,
     fontWeight: "bold",
     fontFamily: "NotoSansJP",
   },
   tableCell: {
     margin: "auto",
-    margin: 5,
     fontSize: 10,
     fontFamily: "NotoSansJP",
   },
