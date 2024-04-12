@@ -90,8 +90,22 @@ const styles = StyleSheet.create({
   },
 });
 
+const calculateTotals = (items) => {
+  const subtotal = items.reduce(
+    (acc, item) => acc + item.quantity * item.unitPrice,
+    0
+  );
+  const tax = items.reduce(
+    (acc, item) => acc + item.quantity * item.unitPrice * item.taxRate,
+    0
+  );
+  const total = subtotal + tax;
+  return { subtotal, tax, total };
+};
+
 // 請求書データをpropsで受け取る
 const InvoicePDF = ({ invoiceData }) => {
+  const { subtotal, tax, total } = calculateTotals(invoiceData.items);
   const renderTableRow = (item, index) => (
     <View style={styles.tableRow} key={index}>
       <View style={styles.tableCol}>
@@ -111,7 +125,10 @@ const InvoicePDF = ({ invoiceData }) => {
       </View>
       <View style={styles.tableCol}>
         <Text style={styles.tableCell}>
-          {item.quantity * item.unitPrice * item.taxRate} 円
+          {Math.floor(
+            item.quantity * item.unitPrice * (1 + item.taxRate)
+          ).toLocaleString()}{" "}
+          円
         </Text>
       </View>
     </View>
@@ -153,6 +170,12 @@ const InvoicePDF = ({ invoiceData }) => {
             </View>
           </View>
           {invoiceData.items.map(renderTableRow)}
+        </View>
+
+        <View style={styles.details}>
+          <Text>小計: {subtotal.toLocaleString()}円</Text>
+          <Text>消費税: {tax.toLocaleString()}円</Text>
+          <Text>合計: {total.toLocaleString()}円</Text>
         </View>
       </Page>
     </Document>
