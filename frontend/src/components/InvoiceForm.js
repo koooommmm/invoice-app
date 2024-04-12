@@ -81,7 +81,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
         )
     );
     const newInvoice = new Invoice(
-      null,
+      initialValues.id || null,
       companyName,
       billingDate,
       dueDate,
@@ -89,8 +89,12 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
       newInvoiceItems
     );
 
-    onSubmit(newInvoice);
-    navigate("/");
+    const id = await onSubmit(newInvoice);
+    if (newInvoice.id) {
+      navigate(`/invoice/${newInvoice.id}`);
+    } else {
+      navigate(`/invoice/${id}`);
+    }
   };
 
   const calculateTotals = () => {

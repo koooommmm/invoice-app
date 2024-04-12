@@ -4,7 +4,8 @@ import InvoiceForm from "./InvoiceForm";
 
 const InvoiceCreate = () => {
   const handleSubmit = async (invoice) => {
-    await addInvoice(JSON.parse(JSON.stringify(invoice)));
+    const id = await addInvoice(JSON.parse(JSON.stringify(invoice)));
+    return id;
   };
 
   return (
