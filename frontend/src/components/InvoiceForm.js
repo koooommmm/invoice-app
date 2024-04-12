@@ -9,11 +9,9 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
     initialValues.companyName || ""
   );
   const [billingDate, setBillingDate] = useState(
-    initialValues.billingDate || new Date().toISOString().slice(0, 10)
+    initialValues.billingDate || new Date()
   );
-  const [dueDate, setDueDate] = useState(
-    initialValues.dueDate || new Date().toISOString().slice(0, 10)
-  );
+  const [dueDate, setDueDate] = useState(initialValues.dueDate || new Date());
   const [author, setAuthor] = useState(initialValues.author || "");
   const [items, setItems] = useState(
     initialValues.items || [
