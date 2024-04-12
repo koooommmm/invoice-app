@@ -1,9 +1,11 @@
+import { BlobProvider, PDFViewer } from "@react-pdf/renderer";
 import { onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { database } from "../firebase";
 import Invoice from "../models/Invoice";
 import InvoiceItem from "../models/InvoiceItem";
+import InvoicePDF from "./InvoicePDF";
 
 const InvoiceDetail = () => {
   const [invoice, setInvoice] = useState(null);
@@ -77,6 +79,18 @@ const InvoiceDetail = () => {
         </div>
         <div className="p-5 bg-white shadow-md rounded-lg">
           <h1 className="text-xl font-bold mb-4">請求書</h1>
+          <PDFViewer width="100%" height="600">
+            <InvoicePDF invoiceData={invoice} />
+          </PDFViewer>
+          <BlobProvider document={<InvoicePDF invoiceData={invoice} />}>
+            {({ blob, url, loading, error }) => {
+              return (
+                <a href={url} download="invoice.pdf">
+                  Download
+                </a>
+              );
+            }}
+          </BlobProvider>
         </div>
       </div>
     </div>
