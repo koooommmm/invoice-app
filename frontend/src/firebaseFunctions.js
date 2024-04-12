@@ -1,4 +1,4 @@
-import { push, ref, set, update } from "firebase/database";
+import { push, ref, remove, set, update } from "firebase/database";
 import { database } from "./firebase";
 
 // 新規請求書の追加
@@ -12,4 +12,10 @@ export const addInvoice = async (invoice) => {
 export const updateInvoice = async (invoiceId, invoice) => {
   const invoiceRef = ref(database, `invoices/${invoiceId}`);
   await update(invoiceRef, invoice);
+};
+
+// 請求書の削除
+export const deleteInvoice = async (invoiceId) => {
+  const invoiceRef = ref(database, `invoices/${invoiceId}`);
+  await remove(invoiceRef);
 };

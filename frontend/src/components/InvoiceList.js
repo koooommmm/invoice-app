@@ -2,6 +2,7 @@ import { onValue, ref } from "firebase/database";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { database } from "../firebase";
+import { deleteInvoice } from "../firebaseFunctions";
 import Invoice from "../models/Invoice";
 import InvoiceItem from "../models/InvoiceItem";
 
@@ -48,6 +49,10 @@ const InvoiceList = () => {
     navigate(`/invoice/${invoiceId}`); // 該当する請求書の詳細ページへ遷移
   };
 
+  const handleDeleteInvoice = (invoiceId) => {
+    deleteInvoice(invoiceId);
+  };
+
   return (
     <div>
       <div className="max-w-5xl mx-auto mt-10">
@@ -65,6 +70,7 @@ const InvoiceList = () => {
             <table className="w-full text-sm text-left ">
               <thead className="text-xsuppercase bg-gray-50">
                 <tr>
+                  <th scope="col"></th>
                   <th scope="col"></th>
                   <th scope="col"></th>
                   <th scope="col"></th>
@@ -92,6 +98,17 @@ const InvoiceList = () => {
                     </td>
                     <td className="py-4 px-6">
                       <div className="text-xl"></div>
+                    </td>
+                    <td>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteInvoice(invoice.id);
+                        }}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                      >
+                        削除
+                      </button>
                     </td>
                   </tr>
                 ))}
