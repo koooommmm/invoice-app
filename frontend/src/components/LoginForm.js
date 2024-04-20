@@ -86,6 +86,14 @@ export default function LoginForm() {
             アカウントをお持ちでない方
           </Link>
         </div>
+        <div className="mt-2 text-center">
+          <Link
+            to="/password-reset"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
+            パスワードを忘れた方
+          </Link>
+        </div>
       </div>
     </div>
   );
