@@ -9,6 +9,7 @@ import InvoiceDetail from "./components/InvoiceDetail";
 import InvoiceList from "./components/InvoiceList";
 import InvoiceUpdate from "./components/InvoiceUpdate";
 import LoginForm from "./components/LoginForm";
+import PasswordResetForm from "./components/PasswordResetForm";
 import SignUpForm from "./components/SignUpForm";
 import "./tailwind.css";
 
@@ -35,6 +36,14 @@ function App() {
             element={
               <PublicRoute>
                 <SignUpForm />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/password-reset"
+            element={
+              <PublicRoute>
+                <PasswordResetForm />
               </PublicRoute>
             }
           />
