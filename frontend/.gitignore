@@ -9,7 +9,8 @@
 /coverage
 
 # production
-/build
+/build/
+!/build/fonts/*.otf
 
 # misc
 .DS_Store
