@@ -15,7 +15,7 @@ const InvoiceUpdate = () => {
   let { invoiceId } = useParams();
 
   useEffect(() => {
-    const invoiceIdRef = ref(database, `invoices/${invoiceId}`);
+    const invoiceIdRef = ref(database, `invoices/${user.uid}/${invoiceId}`);
     const unsubscribe = onValue(invoiceIdRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();
@@ -45,7 +45,7 @@ const InvoiceUpdate = () => {
     });
 
     return () => unsubscribe();
-  }, [invoiceId]);
+  }, [user, invoiceId]);
 
   const handleSubmit = async (invoice) => {
     await updateInvoice(
