@@ -45,7 +45,7 @@ const InvoiceList = () => {
     });
 
     return () => unsubscribe(); // コンポーネントのアンマウント時にリスナーを解除
-  }, []);
+  }, [user]);
 
   // 行をクリックしたときに実行する関数
   const handleRowClick = (invoiceId) => {

@@ -47,7 +47,7 @@ const InvoiceDetail = () => {
 
       return () => unsubscribe();
     }
-  }, [user?.uid, invoiceId]);
+  }, [user, invoiceId]);
 
   if (!invoice) {
     return null;
