@@ -26,6 +26,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
       },
     ]
   );
+  const [error, setError] = useState('');
 
   const addInvoiceItem = () => {
     setItems([
@@ -71,6 +72,22 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // フォームの検証
+    if (!companyName || !billingDate || !dueDate || !author || !status) {
+      setError('すべての必須項目を入力してください。');
+      return;
+    }
+
+    if (
+      items.length === 0 ||
+      items.some(
+        (item) => !item.itemName || item.quantity <= 0 || item.unitPrice <= 0
+      )
+    ) {
+      setError('1つ以上の品目・品名を入力してください。');
+      return;
+    }
+
     const newInvoiceItems = items.map(
       (item) =>
         new InvoiceItem(
@@ -116,6 +133,14 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {error && (
+        <div
+          className='p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800'
+          role='alert'
+        >
+          {error}
+        </div>
+      )}
       <div className='max-w-5xl mx-auto mt-10'>
         <div className='p-5 bg-white shadow-md rounded-lg'>
           <div className='flex justify-between'>
@@ -130,6 +155,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   value={companyName}
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   onChange={(e) => setCompanyName(e.target.value)}
+                  required
                 />
               </div>
               <div className='mb-5'>
@@ -141,6 +167,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   value={billingDate.toISOString().slice(0, 10)}
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   onChange={(e) => setBillingDate(e.target.value)}
+                  required
                 />
               </div>
               <div className='mb-5'>
@@ -152,6 +179,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   value={dueDate.toISOString().slice(0, 10)}
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   onChange={(e) => setDueDate(e.target.value)}
+                  required
                 />
               </div>
               <div className='mb-5'>
@@ -182,6 +210,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   value={author}
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   onChange={(e) => setAuthor(e.target.value)}
+                  required
                 />
               </div>
             </div>
@@ -214,6 +243,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                         onChange={(e) =>
                           handleItemChange(index, 'itemName', e.target.value)
                         }
+                        required
                       />
                     </td>
                     <td>
@@ -223,6 +253,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                         onChange={(e) =>
                           handleItemChange(index, 'quantity', e.target.value)
                         }
+                        required
                       />
                     </td>
                     <td>
@@ -232,6 +263,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                         onChange={(e) =>
                           handleItemChange(index, 'unit', e.target.value)
                         }
+                        required
                       />
                     </td>
                     <td>
@@ -241,6 +273,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                         onChange={(e) =>
                           handleItemChange(index, 'unitPrice', e.target.value)
                         }
+                        required
                       />
                     </td>
                     <td>
@@ -251,6 +284,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                         onChange={(e) =>
                           handleItemChange(index, 'taxRate', e.target.value)
                         }
+                        required
                       />
                     </td>
                     <td>{item.amount.toLocaleString()}円</td>
