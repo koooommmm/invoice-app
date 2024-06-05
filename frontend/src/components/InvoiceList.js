@@ -53,6 +53,24 @@ const InvoiceList = () => {
     deleteInvoice(invoiceId);
   };
 
+  // ステータスに応じて色を変更するための関数
+  const getStatusClass = (status) => {
+    switch (status) {
+      case '下書き':
+        return 'bg-gray-200 text-gray-700';
+      case '送信済み':
+        return 'bg-blue-200 text-blue-700';
+      case '支払い済み':
+        return 'bg-green-200 text-green-700';
+      case '延滞':
+        return 'bg-red-200 text-red-700';
+      case 'キャンセル':
+        return 'bg-yellow-200 text-yellow-700';
+      default:
+        return 'bg-gray-200 text-gray-700';
+    }
+  };
+
   return (
     <div>
       <div className='max-w-5xl mx-auto mt-10'>
@@ -84,7 +102,11 @@ const InvoiceList = () => {
                     onClick={() => handleRowClick(invoice.id)}
                   >
                     <td>
-                      <span className='border-2 border-indigo-500 text-indigo-700 font-bold py-2 px-4 rounded'>
+                      <span
+                        className={`border-2 font-bold py-2 px-4 rounded ${getStatusClass(
+                          invoice.status
+                        )}`}
+                      >
                         {invoice.status}
                       </span>
                     </td>

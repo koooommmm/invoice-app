@@ -13,6 +13,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
   );
   const [dueDate, setDueDate] = useState(initialValues.dueDate || new Date());
   const [author, setAuthor] = useState(initialValues.author || '');
+  const [status, setStatus] = useState(initialValues.status || '下書き');
   const [items, setItems] = useState(
     initialValues.items || [
       {
@@ -86,7 +87,8 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
       billingDate,
       dueDate,
       author,
-      newInvoiceItems
+      newInvoiceItems,
+      status
     );
 
     const id = await onSubmit(newInvoice);
@@ -151,6 +153,22 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
                   onChange={(e) => setDueDate(e.target.value)}
                 />
+              </div>
+              <div className='mb-5'>
+                <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                  ステータス
+                </label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
+                >
+                  <option value='下書き'>下書き</option>
+                  <option value='送信済み'>送信済み</option>
+                  <option value='支払い済み'>支払い済み</option>
+                  <option value='延滞'>延滞</option>
+                  <option value='キャンセル'>キャンセル</option>
+                </select>
               </div>
             </div>
             <div>

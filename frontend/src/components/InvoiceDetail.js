@@ -69,7 +69,10 @@ const InvoiceDetail = () => {
               <p className='mb-2'>
                 請求日: {invoice.billingDate.toLocaleDateString()}
               </p>
-              <p>お支払い期間: {invoice.dueDate.toLocaleDateString()}</p>
+              <p className='mb-2'>
+                お支払い期間: {invoice.dueDate.toLocaleDateString()}
+              </p>
+              <p className='mb-2'>ステータス: {invoice.status}</p>
             </div>
             <div>
               <h1 className='text-xl font-bold mb-4'>自社情報</h1>
