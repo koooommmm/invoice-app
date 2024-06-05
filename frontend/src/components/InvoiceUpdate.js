@@ -1,11 +1,11 @@
-import { onValue, ref } from "firebase/database";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { database } from "../firebase";
-import { updateInvoice } from "../firebaseFunctions";
-import Invoice from "../models/Invoice";
-import InvoiceItem from "../models/InvoiceItem";
-import InvoiceForm from "./InvoiceForm";
+import { onValue, ref } from 'firebase/database';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { database } from '../firebase';
+import { updateInvoice } from '../firebaseFunctions';
+import Invoice from '../models/Invoice';
+import InvoiceItem from '../models/InvoiceItem';
+import InvoiceForm from './InvoiceForm';
 
 const InvoiceUpdate = () => {
   const [invoice, setInvoice] = useState(null);
@@ -53,9 +53,9 @@ const InvoiceUpdate = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-10">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">請求書の編集</h1>
+    <div className='max-w-5xl mx-auto mt-10'>
+      <div className='flex justify-between items-center mb-6'>
+        <h1 className='text-2xl font-bold'>請求書の編集</h1>
       </div>
       <InvoiceForm
         initialValues={invoice}

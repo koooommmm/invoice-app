@@ -1,9 +1,9 @@
-import { push, ref, remove, set, update } from "firebase/database";
-import { database } from "./firebase";
+import { push, ref, remove, set, update } from 'firebase/database';
+import { database } from './firebase';
 
 // 新規請求書の追加
 export const addInvoice = async (invoice) => {
-  const newInvoiceRef = push(ref(database, "invoices"));
+  const newInvoiceRef = push(ref(database, 'invoices'));
   await set(newInvoiceRef, invoice);
   return newInvoiceRef.key; // 新しい請求書のキー（ID）を返す
 };

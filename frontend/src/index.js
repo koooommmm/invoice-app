@@ -1,10 +1,10 @@
-import React from "react";
-import { createRoot } from "react-dom/client"; // '/client'からcreateRootをインポート
-import App from "./App";
-import { AuthProvider } from "./AuthProvider";
+import React from 'react';
+import { createRoot } from 'react-dom/client'; // '/client'からcreateRootをインポート
+import App from './App';
+import { AuthProvider } from './AuthProvider';
 
 // rootコンテナを取得
-const container = document.getElementById("root");
+const container = document.getElementById('root');
 
 // createRootを使用してrootに対してAppコンポーネントをレンダリング
 const root = createRoot(container);

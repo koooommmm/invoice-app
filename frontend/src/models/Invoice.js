@@ -6,7 +6,7 @@ export default class Invoice {
     dueDate,
     author,
     items,
-    status = "未請求"
+    status = '未請求'
   ) {
     this.id = id;
     this.companyName = companyName;
