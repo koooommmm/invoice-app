@@ -15,41 +15,44 @@ const InvoiceDetail = () => {
   let { invoiceId } = useParams();
 
   useEffect(() => {
-    const invoiceIdRef = ref(database, `invoices/${user.uid}/${invoiceId}`);
-    const unsubscribe = onValue(invoiceIdRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        // Invoiceクラスのインスタンスを作成し、データを格納
-        const invoice = new Invoice(
-          snapshot.key,
-          data.companyName,
-          data.billingDate ? new Date(data.billingDate) : null,
-          data.dueDate ? new Date(data.dueDate) : null,
-          data.author,
-          data.items.map(
-            (itemData) =>
-              new InvoiceItem(
-                itemData.itemName,
-                itemData.quantity,
-                itemData.unit,
-                itemData.unitPrice,
-                itemData.taxRate
-              )
-          ),
-          data.status
-        );
-        setInvoice(invoice);
-      } else {
-        setInvoice();
-      }
-    });
+    if (user) {
+      const invoiceIdRef = ref(database, `invoices/${user.uid}/${invoiceId}`);
+      const unsubscribe = onValue(invoiceIdRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          // Invoiceクラスのインスタンスを作成し、データを格納
+          const invoice = new Invoice(
+            snapshot.key,
+            data.companyName,
+            data.billingDate ? new Date(data.billingDate) : null,
+            data.dueDate ? new Date(data.dueDate) : null,
+            data.author,
+            data.items.map(
+              (itemData) =>
+                new InvoiceItem(
+                  itemData.itemName,
+                  itemData.quantity,
+                  itemData.unit,
+                  itemData.unitPrice,
+                  itemData.taxRate
+                )
+            ),
+            data.status
+          );
+          setInvoice(invoice);
+        } else {
+          setInvoice(null);
+        }
+      });
 
-    return () => unsubscribe();
-  }, [invoiceId]);
+      return () => unsubscribe();
+    }
+  }, [user?.uid, invoiceId]);
 
   if (!invoice) {
-    return;
+    return null;
   }
+
   return (
     <div>
       <div className='max-w-5xl mx-auto mt-10'>
