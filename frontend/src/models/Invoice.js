@@ -1,13 +1,5 @@
 export default class Invoice {
-  constructor(
-    id,
-    companyName,
-    billingDate,
-    dueDate,
-    author,
-    items,
-    status = '未請求'
-  ) {
+  constructor(id, companyName, billingDate, dueDate, author, items, status) {
     this.id = id;
     this.companyName = companyName;
     this.billingDate = billingDate;

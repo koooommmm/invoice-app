@@ -18,11 +18,11 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
     initialValues.items || [
       {
         itemName: '',
-        quantity: 1,
+        quantity: '',
         unit: '',
-        unitPrice: 0,
+        unitPrice: '',
         taxRate: 0.1,
-        amount: 0,
+        amount: '',
       },
     ]
   );
@@ -33,11 +33,11 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
       ...items,
       {
         itemName: '',
-        quantity: 1,
+        quantity: '',
         unit: '',
-        unitPrice: 0,
+        unitPrice: '',
         taxRate: 0.1,
-        amount: 0,
+        amount: '',
       },
     ]);
   };
@@ -47,16 +47,14 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
       if (i === index) {
         const updatedItem = {
           ...item,
-          [field]:
-            field === 'quantity' || field === 'unitPrice' || field === 'taxRate'
-              ? parseFloat(value)
-              : value,
+          [field]: value,
         };
-        updatedItem.amount = Math.floor(
-          updatedItem.quantity *
-            updatedItem.unitPrice *
-            (1 + updatedItem.taxRate)
-        );
+
+        const quantity = parseFloat(updatedItem.quantity) || 0;
+        const unitPrice = parseFloat(updatedItem.unitPrice) || 0;
+        const taxRate = parseFloat(updatedItem.taxRate) || 0.1;
+
+        updatedItem.amount = Math.floor(quantity * unitPrice * (1 + taxRate));
         return updatedItem;
       }
       return item;
@@ -78,13 +76,18 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
       return;
     }
 
+    if (items.length === 0) {
+      setError('1つ以上の明細を入力してください。');
+      return;
+    }
+
     if (
-      items.length === 0 ||
       items.some(
-        (item) => !item.itemName || item.quantity <= 0 || item.unitPrice <= 0
+        (item) =>
+          !item.itemName || isNaN(item.quantity) || isNaN(item.unitPrice)
       )
     ) {
-      setError('1つ以上の品目・品名を入力してください。');
+      setError('明細を正しく入力してください');
       return;
     }
 
@@ -166,7 +169,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   type='date'
                   value={billingDate.toISOString().slice(0, 10)}
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                  onChange={(e) => setBillingDate(e.target.value)}
+                  onChange={(e) => setBillingDate(new Date(e.target.value))}
                   required
                 />
               </div>
@@ -178,7 +181,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                   type='date'
                   value={dueDate.toISOString().slice(0, 10)}
                   className='border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-                  onChange={(e) => setDueDate(e.target.value)}
+                  onChange={(e) => setDueDate(new Date(e.target.value))}
                   required
                 />
               </div>
@@ -248,7 +251,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                     </td>
                     <td>
                       <input
-                        type='number'
+                        type='text'
                         value={item.quantity}
                         onChange={(e) =>
                           handleItemChange(index, 'quantity', e.target.value)
@@ -268,7 +271,7 @@ const InvoiceForm = ({ initialValues, onSubmit }) => {
                     </td>
                     <td>
                       <input
-                        type='number'
+                        type='text'
                         value={item.unitPrice}
                         onChange={(e) =>
                           handleItemChange(index, 'unitPrice', e.target.value)
