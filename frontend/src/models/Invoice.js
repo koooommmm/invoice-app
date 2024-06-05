@@ -1,13 +1,5 @@
 export default class Invoice {
-  constructor(
-    id,
-    companyName,
-    billingDate,
-    dueDate,
-    author,
-    items,
-    status = "未請求"
-  ) {
+  constructor(id, companyName, billingDate, dueDate, author, items, status) {
     this.id = id;
     this.companyName = companyName;
     this.billingDate = billingDate;
@@ -35,5 +27,20 @@ export default class Invoice {
     this.author = updateInvoice.author;
     this.items = updateInvoice.items;
     this.status = updateInvoice.status;
+  }
+
+  // JSON形式で要素を取得するメソッド
+  toJSON() {
+    return {
+      id: this.id,
+      companyName: this.companyName,
+      billingDate: this.billingDate.toISOString(),
+      dueDate: this.dueDate.toISOString(),
+      author: this.author,
+      items: this.items.map((item) => item.toJSON()),
+      status: this.status,
+      totalAmount: this.getTotalAmount(),
+      totalAmountWithTax: this.getTotalAmountWithTax(),
+    };
   }
 }

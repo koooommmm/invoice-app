@@ -20,4 +20,16 @@ export default class InvoiceItem {
     const roundedAmount = Math.ceil(grossAmount);
     return roundedAmount;
   }
+
+  // JSON形式で要素を取得するメソッド
+  toJSON() {
+    return {
+      itemName: this.itemName,
+      quantity: this.quantity,
+      unit: this.unit,
+      unitPrice: this.unitPrice,
+      taxRate: this.taxRate,
+      amount: this.amount,
+    };
+  }
 }

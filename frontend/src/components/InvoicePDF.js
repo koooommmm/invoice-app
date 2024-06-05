@@ -5,88 +5,88 @@ import {
   StyleSheet,
   Text,
   View,
-} from "@react-pdf/renderer";
-import React from "react";
+} from '@react-pdf/renderer';
+import React from 'react';
 
 Font.register({
-  family: "NotoSansJP",
-  src: "/fonts/NotoSerifJP-Regular.otf",
+  family: 'NotoSansJP',
+  src: '/fonts/NotoSerifJP-Regular.otf',
 });
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: "column",
-    backgroundColor: "#FFFFFF",
+    flexDirection: 'column',
+    backgroundColor: '#FFFFFF',
     padding: 32,
   },
   header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 20,
   },
   title: {
     fontSize: 18,
-    fontFamily: "NotoSansJP",
+    fontFamily: 'NotoSansJP',
     marginBottom: 20,
   },
   subtitle: {
     fontSize: 14,
-    fontFamily: "NotoSansJP",
-    color: "#555",
+    fontFamily: 'NotoSansJP',
+    color: '#555',
   },
   details: {
-    fontFamily: "NotoSansJP",
+    fontFamily: 'NotoSansJP',
   },
   footer: {
-    position: "absolute",
+    position: 'absolute',
     fontSize: 12,
     bottom: 30,
     left: 30,
     right: 30,
-    textAlign: "center",
-    fontFamily: "NotoSansJP",
+    textAlign: 'center',
+    fontFamily: 'NotoSansJP',
   },
   table: {
-    display: "table",
-    width: "auto",
-    borderStyle: "solid",
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderRightWidth: 0,
     borderBottomWidth: 0,
-    fontFamily: "NotoSansJP",
+    fontFamily: 'NotoSansJP',
   },
   tableRow: {
-    margin: "auto",
-    flexDirection: "row",
-    fontFamily: "NotoSansJP",
+    margin: 'auto',
+    flexDirection: 'row',
+    fontFamily: 'NotoSansJP',
   },
   tableColHeader: {
-    width: "16.67%",
-    borderStyle: "solid",
+    width: '16.67%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
-    backgroundColor: "#f3f3f3",
-    fontFamily: "NotoSansJP",
+    backgroundColor: '#f3f3f3',
+    fontFamily: 'NotoSansJP',
   },
   tableCol: {
-    width: "16.67%",
-    borderStyle: "solid",
+    width: '16.67%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
-    fontFamily: "NotoSansJP",
+    fontFamily: 'NotoSansJP',
   },
   tableCellHeader: {
-    margin: "auto",
+    margin: 'auto',
     fontSize: 12,
-    fontWeight: "bold",
-    fontFamily: "NotoSansJP",
+    fontWeight: 'bold',
+    fontFamily: 'NotoSansJP',
   },
   tableCell: {
-    margin: "auto",
+    margin: 'auto',
     fontSize: 10,
-    fontFamily: "NotoSansJP",
+    fontFamily: 'NotoSansJP',
   },
 });
 
@@ -127,7 +127,7 @@ const InvoicePDF = ({ invoiceData }) => {
         <Text style={styles.tableCell}>
           {Math.floor(
             item.quantity * item.unitPrice * (1 + item.taxRate)
-          ).toLocaleString()}{" "}
+          ).toLocaleString()}{' '}
           円
         </Text>
       </View>
@@ -136,7 +136,7 @@ const InvoicePDF = ({ invoiceData }) => {
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size='A4' style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.title}>請求書</Text>
           <Text style={styles.subtitle}>No. {invoiceData.id}</Text>

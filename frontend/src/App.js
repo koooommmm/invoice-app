@@ -1,17 +1,17 @@
-import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import { AuthProvider, useAuth } from "./AuthProvider";
-import PrivateRoute from "./PrivateRoute";
-import PublicRoute from "./PublicRoute";
-import Header from "./components/Header";
-import InvoiceCreate from "./components/InvoiceCreate";
-import InvoiceDetail from "./components/InvoiceDetail";
-import InvoiceList from "./components/InvoiceList";
-import InvoiceUpdate from "./components/InvoiceUpdate";
-import LoginForm from "./components/LoginForm";
-import PasswordResetForm from "./components/PasswordResetForm";
-import SignUpForm from "./components/SignUpForm";
-import "./tailwind.css";
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { AuthProvider, useAuth } from './AuthProvider';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
+import Header from './components/Header';
+import InvoiceCreate from './components/InvoiceCreate';
+import InvoiceDetail from './components/InvoiceDetail';
+import InvoiceList from './components/InvoiceList';
+import InvoiceUpdate from './components/InvoiceUpdate';
+import LoginForm from './components/LoginForm';
+import PasswordResetForm from './components/PasswordResetForm';
+import SignUpForm from './components/SignUpForm';
+import './tailwind.css';
 
 function App() {
   const { loading } = useAuth();
@@ -24,7 +24,7 @@ function App() {
         <Header></Header>
         <Routes>
           <Route
-            path="/login"
+            path='/login'
             element={
               <PublicRoute>
                 <LoginForm />
@@ -32,7 +32,7 @@ function App() {
             }
           />
           <Route
-            path="/signup"
+            path='/signup'
             element={
               <PublicRoute>
                 <SignUpForm />
@@ -40,7 +40,7 @@ function App() {
             }
           />
           <Route
-            path="/password-reset"
+            path='/password-reset'
             element={
               <PublicRoute>
                 <PasswordResetForm />
@@ -48,7 +48,7 @@ function App() {
             }
           />
           <Route
-            path="/"
+            path='/'
             element={
               <PrivateRoute>
                 <InvoiceList />
@@ -56,7 +56,7 @@ function App() {
             }
           />
           <Route
-            path="/invoice/:invoiceId"
+            path='/invoice/:invoiceId'
             element={
               <PrivateRoute>
                 <InvoiceDetail />
@@ -64,7 +64,7 @@ function App() {
             }
           />
           <Route
-            path="/invoice/:invoiceId/update"
+            path='/invoice/:invoiceId/update'
             element={
               <PrivateRoute>
                 <InvoiceUpdate />
@@ -72,7 +72,7 @@ function App() {
             }
           />
           <Route
-            path="/create-invoice"
+            path='/create-invoice'
             element={
               <PrivateRoute>
                 <InvoiceCreate />

@@ -3,9 +3,9 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
-} from "firebase/auth";
-import React, { useContext, useEffect, useState } from "react";
-import { auth } from "./firebase";
+} from 'firebase/auth';
+import React, { useContext, useEffect, useState } from 'react';
+import { auth } from './firebase';
 
 const AuthContext = React.createContext();
 
