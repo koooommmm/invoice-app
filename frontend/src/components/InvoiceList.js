@@ -1,3 +1,4 @@
+import { getAuth } from 'firebase/auth';
 import { onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,11 +8,13 @@ import Invoice from '../models/Invoice';
 import InvoiceItem from '../models/InvoiceItem';
 
 const InvoiceList = () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
   const [invoices, setInvoices] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const invoicesRef = ref(database, 'invoices'); // "invoices"というデータベースの参照を作成
+    const invoicesRef = ref(database, `invoices/${user.uid}`); // "invoices"というデータベースの参照を作成
 
     const unsubscribe = onValue(invoicesRef, (snapshot) => {
       const invoicesData = [];
@@ -50,7 +53,7 @@ const InvoiceList = () => {
   };
 
   const handleDeleteInvoice = (invoiceId) => {
-    deleteInvoice(invoiceId);
+    deleteInvoice(user.uid, invoiceId);
   };
 
   // ステータスに応じて色を変更するための関数

@@ -1,4 +1,5 @@
 import { BlobProvider, PDFViewer } from '@react-pdf/renderer';
+import { getAuth } from 'firebase/auth';
 import { onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -8,11 +9,13 @@ import InvoiceItem from '../models/InvoiceItem';
 import InvoicePDF from './InvoicePDF';
 
 const InvoiceDetail = () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
   const [invoice, setInvoice] = useState(null);
   let { invoiceId } = useParams();
 
   useEffect(() => {
-    const invoiceIdRef = ref(database, `invoices/${invoiceId}`);
+    const invoiceIdRef = ref(database, `invoices/${user.uid}/${invoiceId}`);
     const unsubscribe = onValue(invoiceIdRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.val();

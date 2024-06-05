@@ -1,10 +1,14 @@
+import { getAuth } from 'firebase/auth';
 import React from 'react';
 import { addInvoice } from '../firebaseFunctions';
 import InvoiceForm from './InvoiceForm';
 
 const InvoiceCreate = () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
+
   const handleSubmit = async (invoice) => {
-    const id = await addInvoice(invoice.toJSON());
+    const id = await addInvoice(user.uid, invoice.toJSON());
     return id;
   };
 

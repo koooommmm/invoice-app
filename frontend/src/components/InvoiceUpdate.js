@@ -1,3 +1,4 @@
+import { getAuth } from 'firebase/auth';
 import { onValue, ref } from 'firebase/database';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -8,6 +9,8 @@ import InvoiceItem from '../models/InvoiceItem';
 import InvoiceForm from './InvoiceForm';
 
 const InvoiceUpdate = () => {
+  const auth = getAuth();
+  const user = auth.currentUser;
   const [invoice, setInvoice] = useState(null);
   let { invoiceId } = useParams();
 
@@ -45,7 +48,11 @@ const InvoiceUpdate = () => {
   }, [invoiceId]);
 
   const handleSubmit = async (invoice) => {
-    await updateInvoice(invoiceId, JSON.parse(JSON.stringify(invoice)));
+    await updateInvoice(
+      user.uid,
+      invoiceId,
+      JSON.parse(JSON.stringify(invoice))
+    );
   };
 
   if (!invoice) {
